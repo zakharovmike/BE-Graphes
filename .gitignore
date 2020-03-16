@@ -18,3 +18,8 @@ doc
 *.mapgr
 *.path
 *.tgz
+
+# Other files
+package.json
+package-lock.json
+node_modules
