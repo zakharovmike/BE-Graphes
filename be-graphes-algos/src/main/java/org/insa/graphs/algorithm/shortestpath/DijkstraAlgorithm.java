@@ -5,7 +5,6 @@ import java.util.Collections;
 
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 
-import org.insa.graphs.algorithm.utils.PriorityQueue;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
 import org.insa.graphs.algorithm.utils.ElementNotFoundException;
 
@@ -22,12 +21,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
     @Override
     protected ShortestPathSolution doRun() {
-    	
-    	// Retrieve the graph
+    	  	
+      	// Retrieve the graph
         final ShortestPathData data = getInputData();
         Graph graph = data.getGraph();
         
-        PriorityQueue<Label> queue = new BinaryHeap<>();
+        BinaryHeap<Label> heap = new BinaryHeap<>();
         ShortestPathSolution solution = null;
         
         // Initialize array of cost labels
@@ -41,16 +40,16 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
         // Initialize origin
         labels[originIndex].setCost(0);
-        queue.insert(labels[originIndex]);
+        heap.insert(labels[originIndex]);
         
         // Notify observers about the first event (origin processed).
         notifyOriginProcessed(data.getOrigin());
         
         // Core of algorithm
-        while (!labels[destinationIndex].isMarked() && !queue.isEmpty()) {
+        while (!labels[destinationIndex].isMarked() && !heap.isEmpty()) {
         	
         	// Take next closest unmarked node x, and mark it
-        	Label x = queue.deleteMin();
+        	Label x = heap.deleteMin();
         	x.mark();
         	notifyNodeMarked(x.getNode());
         	
@@ -69,19 +68,18 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         			double newCost = x.getCost() + data.getCost(successor);
         			
         			if (newCost < oldCost) {
-        				y.setCost(newCost);
-        				y.setPrevious(successor);
-        				
         				try {
-        					queue.remove(y);
+        					heap.remove(y);
         				} catch (ElementNotFoundException e) {
         					notifyNodeReached(successor.getDestination());
         				} finally {
-        					queue.insert(y);
+        					y.setCost(newCost);
+            				y.setPrevious(successor);
+            				heap.insert(y);
         				}
         			}
         		}
-        	}     	
+        	}
         }
         
         // Destination has no predecessor, the solution is infeasible
