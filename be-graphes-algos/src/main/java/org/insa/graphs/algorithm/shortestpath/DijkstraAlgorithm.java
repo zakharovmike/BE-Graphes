@@ -14,9 +14,19 @@ import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Path;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
+	
+	protected Graph graph;
+	protected Label[] labels;
 
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
+    }
+    
+    protected void initCostLabels() {
+    	this.labels = new Label[this.graph.size()];
+        for (Node n: this.graph.getNodes()) {
+        	this.labels[n.getId()] = new Label(n);
+        }
     }
 
     @Override
@@ -24,16 +34,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     	  	
       	// Retrieve the graph
         final ShortestPathData data = getInputData();
-        Graph graph = data.getGraph();
+        this.graph = data.getGraph();
         
         BinaryHeap<Label> heap = new BinaryHeap<>();
         ShortestPathSolution solution = null;
         
         // Initialize array of cost labels
-        Label[] labels = new Label[graph.size()];
-        for (Node n: graph.getNodes()) {
-        	labels[n.getId()] = new Label(n);
-        }
+        initCostLabels();
         
         int originIndex = data.getOrigin().getId();
         int destinationIndex = data.getDestination().getId();
