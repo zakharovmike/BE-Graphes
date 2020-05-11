@@ -19,8 +19,6 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
     		if (this.graph.getGraphInformation().hasMaximumSpeed()) {
     			maxSpeed = this.graph.getGraphInformation().getMaximumSpeed();
     		}
-    		
-        	System.out.println(maxSpeed);
         	
         	this.labels = new LabelStar[this.graph.size()];
         	Node destination = super.getInputData().getDestination();
